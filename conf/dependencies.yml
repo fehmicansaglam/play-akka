@@ -1,0 +1,13 @@
+# Application dependencies
+
+require:
+    - play
+    - com.typesafe.akka -> akka-actor 2.0
+
+# Custom repository
+repositories:
+    - akka:
+        type: iBiblio
+        root: "http://repo.akka.io/releases/"
+        contains:
+          - com.typesafe.akka -> *
