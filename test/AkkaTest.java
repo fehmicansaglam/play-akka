@@ -1,15 +1,20 @@
+import java.util.UUID;
+
 import org.junit.Test;
 
 import play.test.UnitTest;
-import akka.Pi;
+import akka.actor.Master;
+import akka.pojo.immutable.Notification;
 
 public class AkkaTest extends UnitTest {
 
 	@Test
-	public void testCalculatePi() {
-		Pi c = new Pi();
-		c.calculate(4, 10000, 10000);
-		c.awaitTermination();
+	public void testHazelcast() {
+		final String username = "canavar";
+		final String text = UUID.randomUUID().toString();
+		final Notification notification = new Notification(username, text);
+		Master.INSTANCE.tell(notification);
+		Master.awaitTermination();
 	}
 
 }
