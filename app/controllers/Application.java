@@ -1,18 +1,12 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-
-import java.util.*;
-
-import antlr.Utils;
-
-import models.*;
-import Utils.Pi;
+import akka.Pi;
+import play.Logger;
+import play.mvc.Controller;
 
 public class Application extends Controller {
 
-	public static void index() {
+	public static void index() { 
 		Logger.info("Started");
 		Pi c = new Pi();
 		c.calculate(4, 50000, 50000);

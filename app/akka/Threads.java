@@ -1,8 +1,8 @@
-package Utils;
+package akka;
 
 import java.util.concurrent.TimeUnit;
 
-import Utils.Messages.*;
+import akka.Messages.*;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
@@ -68,7 +68,7 @@ public class Threads {
 					Duration duration = Duration.create(
 							System.currentTimeMillis() - start,
 							TimeUnit.MILLISECONDS);
-					listener.tell(new Utils.Messages.PiApproximation(pi,
+					listener.tell(new akka.Messages.PiApproximation(pi,
 							duration), getSelf());
 					// Stops this actor and all its supervised children
 					getContext().stop(getSelf());

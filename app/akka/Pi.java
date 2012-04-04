@@ -1,7 +1,7 @@
-package Utils;
+package akka;
 
-import Utils.Threads.Listener;
-import Utils.Threads.Master;
+import akka.Threads.Listener;
+import akka.Threads.Master;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
