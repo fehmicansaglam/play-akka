@@ -1,42 +1,37 @@
 package akka.actor;
 
 import play.modules.hazelcast.HazelcastPlugin;
-import akka.pojo.immutable.Notification;
-import akka.pojo.immutable.QueueMetadata;
+import akka.immutable.Notification;
+import akka.immutable.QueueMetadata;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hazelcast.core.IMap;
 import com.hazelcast.core.MultiMap;
 
-public class Worker extends UntypedActor {
-
-	private static final Gson GSON = new GsonBuilder().create();
+public class NotificationWriter extends UntypedActor {
 
 	public void onReceive(Object message) {
 		if (message instanceof Notification) {
-			final MultiMap<String, String> notificationMap = HazelcastPlugin
+			final MultiMap<String, Notification> notificationMap = HazelcastPlugin
 					.getHazel().getMultiMap("notification-map");
-			final IMap<String, String> notificationMetadataMap = HazelcastPlugin
+			final IMap<String, QueueMetadata> notificationMetadataMap = HazelcastPlugin
 					.getHazel().getMap("notification-metadata-map");
+			notificationMetadataMap.addIndex("entryCount", true);
 			Notification notification = (Notification) message;
 			final String key = notification.username;
 			notificationMap.lock(key);
 			notificationMetadataMap.lock(key);
 
-			notificationMap.put(key, GSON.toJson(notification));
-			QueueMetadata metadata = GSON.fromJson(
-					notificationMetadataMap.get(key), QueueMetadata.class);
+			notificationMap.put(key, notification);
+			QueueMetadata metadata = notificationMetadataMap.get(key);
 			if (metadata == null) {
 				metadata = new QueueMetadata(1, notification.timestamp);
 			} else {
 				metadata = metadata.increment();
 			}
-			notificationMetadataMap.put(key, GSON.toJson(metadata));
+			notificationMetadataMap.put(key, metadata);
 
 			notificationMetadataMap.unlock(key);
 			notificationMap.unlock(key);
-			Master.terminate();
 		} else {
 			unhandled(message);
 		}

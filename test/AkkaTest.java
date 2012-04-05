@@ -3,18 +3,20 @@ import java.util.UUID;
 import org.junit.Test;
 
 import play.test.UnitTest;
-import akka.actor.Master;
-import akka.pojo.immutable.Notification;
+import akka.immutable.Notification;
+import akka.manager.NotificationManager;
 
 public class AkkaTest extends UnitTest {
 
 	@Test
 	public void testHazelcast() {
-		final String username = "canavar";
-		final String text = UUID.randomUUID().toString();
-		final Notification notification = new Notification(username, text);
-		Master.INSTANCE.tell(notification);
-		Master.awaitTermination();
+		for (int i = 0; i < 10000; i++) {
+			final String username = "canavar";
+			final String text = UUID.randomUUID().toString();
+			final Notification notification = new Notification(username, text);
+			NotificationManager.createNotification(notification);
+		}
+		NotificationManager.awaitTermination();
 	}
 
 }

@@ -1,4 +1,4 @@
-package akka.pojo.immutable;
+package akka.immutable;
 
 import java.io.Serializable;
 
